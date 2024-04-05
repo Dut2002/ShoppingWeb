@@ -1,0 +1,254 @@
+﻿@model BusinessObject.Product
+
+@using System.Security.Claims
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var claim = User.Claims.SingleOrDefault(c => c.Type.Equals(ClaimTypes.Name));
+    var role = "User";
+    if (claim != null)
+    {
+        if (claim.Value.Equals("Admin"))
+        {
+            role = "Admin";
+        }
+    }
+
+    if (role.Equals("Admin"))
+    {
+        ViewData["Title"] = "Product Details";
+        <h1>Product Details</h1>
+    }
+    else
+    {
+        ViewData["Title"] = "Product Detail";
+        <h1>Product Detail</h1>
+    }
+}
+<hr />
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <p class="text-danger">@ViewBag.Error</p>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+else
+{
+    @if (TempData["AddError"] != null && !string.IsNullOrEmpty(TempData["AddError"].ToString()))
+    {
+        await Html.RenderPartialAsync("Alert", new ViewDataDictionary(ViewData) { { "role", "danger" }, { "message", TempData["AddError"] } });
+    }
+    @if (TempData["AddSuccess"] != null && !string.IsNullOrEmpty(TempData["AddSuccess"].ToString()))
+    {
+        await Html.RenderPartialAsync("Alert", new ViewDataDictionary(ViewData) { { "role", "success" }, { "message", TempData["AddSuccess"] } });
+    }
+    <div>
+        <p>Home/Electronics/@Model.ProductId</p>
+    </div>
+    <div>
+        @if (role.Equals("Admin"))
+        {
+
+            <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> @Html.Raw("|")
+            ;
+
+        }
+        else if (role.Equals("User"))
+        {
+
+
+            <div id="product">
+                <div id="product-name">
+                    <h2>@Model.ProductName</h2>
+                    <div id="product-detail">
+                        <div id="product-detail-left">
+                            <div id="product-img">
+                                @if (Model.CategoryId == 1)
+                                {
+                                    <img class="product-img" src="~/img/iphone.webp" />
+
+                                    <br>
+                                }
+                                else if (Model.CategoryId == 2)
+                                {
+                                    <img class="product-img" src="~/img/polo.webp" />
+
+                                    <br>
+                                }
+                                else
+                                {
+                                    <img class="product-img" src="~/img/img1.webp" />
+
+                                    <br>
+                                }
+                            </div>
+                            <div id="product-img-items">
+                                @if (Model.CategoryId == 1)
+                                {
+                                    <img class="product-img" src="~/img/iphone.webp" />
+                                    <img class="product-img" src="~/img/iphone.webp" />
+                                    <img class="product-img" src="~/img/iphone.webp" />
+                                    <img class="product-img" src="~/img/iphone.webp" />
+                                    <br>
+                                }
+                                else if (Model.CategoryId == 2)
+                                {
+                                    <img class="product-img" src="~/img/images.jfif" />
+                                    <img class="product-img" src="~/img/images.jfif" />
+                                    <img class="product-img" src="~/img/images.jfif" />
+                                    <img class="product-img" src="~/img/images.jfif" />
+
+                                    <br>
+                                }
+                                else
+                                {
+
+                                    <img class="product-img" src="~/img/img1.webp" />
+                                    <img class="product-img" src="~/img/img1.webp" />
+                                    <img class="product-img" src="~/img/img1.webp" />
+                                    <img class="product-img" src="~/img/img1.webp" />
+
+                                    <br>
+                                }
+                            </div>
+                        </div>
+                        <div id="product-detail-right">
+
+                            <form asp-action="AddToCart" asp-controller="Cart" method="get">
+                                <input type="hidden" name="productId" id="productId" value="@Model.ProductId" />
+                                <div id="product-status" class="ml-5">In stock</div>
+                                <div id="product-price" class="ml-5">@Math.Round(@Model.UnitPrice) $</div>
+                                <div class="row" id="product-detail-right-content">
+
+                                    <div class="col-md-3 ml-5 mt-2">
+                                        <input class="form-control d-inline" type="number" name="quantity" id="quantity" aria-describedby="quantityHelp" value="1" min="1" max="@Model.UnitsInStock" />
+                                        <small id="quantityHelp" class="form-text text-muted">Enter Quantity you want to Order @Html.Raw("<") @(Model.UnitsInStock + 1). Default is 1</small>
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-primary ml-5 mt-lg-5" value="Add To Cart" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="info-detail">
+                <div id="info-detail-title">
+                    <h2>Information deltail</h2>
+                    <div style="margin:10px auto;">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, debitis. Asperiores soluta eveniet eos accusantium doloremque cum suscipit ducimus enim at sapiente mollitia consequuntur dicta quaerat, sunt voluptates autem. Quam!
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem illum autem veritatis maxime corporis quod quibusdam nostrum eaque laborum numquam quos unde eveniet aut, exercitationem voluptatum veniam fugiat, debitis esse?
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio eligendi ratione vitae nobis numquam dolorum assumenda saepe enim cumque blanditiis, deleniti neque voluptate vel ducimus in omnis harum aut nisi.
+                    </div>
+                </div>
+            </div>
+
+        }
+
+        <a class="btn btn-outline-dark" asp-action="Index" style="margin-bottom: 50px"> Back to List</a>
+
+    </div>
+}
+
+<style>
+    #product {
+        background-color: #fff;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #product-name {
+        padding: 15px;
+    }
+
+        #product-name h2 {
+            line-height: 15px;
+            border-bottom: 1px solid gainsboro;
+            width: 100%;
+            font-size: 30px;
+            padding-bottom: 15px;
+        }
+
+    #product-detail {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    #product-detail-left {
+        width: 40%;
+    }
+
+    #product-img img {
+        width: 100%;
+    }
+
+    #product-img-items {
+        text-align: center;
+        margin-top: 20px;
+        display: inline-flex;
+        width: 60%;
+    }
+
+        #product-img-items div {
+            border: 1px solid gainsboro;
+            width: 20%;
+            margin: 5px;
+            border-radius: 5px;
+            padding: 3px 0px;
+        }
+
+            #product-img-items div:hover {
+                border: 1px solid red;
+            }
+
+        #product-img-items img {
+            width: 80%;
+            margin-right: 8px;
+        }
+
+    #product-detail-right {
+        width: 60%;
+    }
+
+    #product-detail-right-content {
+        width: 100%;
+    }
+
+    #product-price {
+        color: red;
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    #product-status {
+        color: green;
+        font-weight: bold;
+    }
+
+    #product-detail-right-button {
+        margin-top: 30px;
+    }
+
+    #product-detail-buttons {
+        margin-top: 20px;
+        display: flex;
+    }
+
+    #product-detail-button {
+        width: 100%;
+    }
+
+        #product-detail-button input[type="button"] {
+            width: 49%;
+            font-weight: bold;
+        }
+
+            #product-detail-button input[type="button"]:hover {
+                box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+                -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+                -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+            }
+</style>

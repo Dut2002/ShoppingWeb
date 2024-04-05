@@ -1,0 +1,91 @@
+﻿@model IEnumerable<CartItem>
+
+@{
+    ViewData["Title"] = "View Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using DataAccess.Repository.ProductRepo
+@using BusinessObject 
+
+@{ 
+    IProductRepository productRepository = new ProductRepository();
+} 
+
+<h1>View Your Cart</h1>
+<hr />
+
+@if (ViewBag.Error != null)
+{
+    <div class="row mt-3">
+        <div class="alert alert-danger" role="alert">@ViewBag.Error</div>
+    </div>
+}
+else
+{
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-danger">Your Cart is empty! Start shopping <a asp-action="Index" asp-controller="Product">here</a></div>
+    }
+    else
+    {
+        <table class="table table-hover table-bordered table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th></th>
+                    <th>
+                        Product Name                      
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            @foreach (var cartItem in Model)
+            {
+                Product product = productRepository.GetProduct(cartItem.ProductId);
+                <form asp-action="UpdateCart" method="get">
+            <tr>
+                    <td style="width:20%"><img style="width: 100%" src="~/img/image.jpg" /></td>
+                <td>
+                    <input class="form-control" type="hidden" name="ProductId" id="ProductId" value="@cartItem.ProductId" />
+                    @Html.DisplayFor(modelItem => cartItem.ProductName)
+                </td>
+                <td>
+                    <input class="form-control" type="number" name="quantity" id="quantity" value="@cartItem.Quantity" min="1" max="@product.UnitsInStock"/>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cartItem.Total)
+                </td>
+                <td>
+                    <input type="submit" class="btn btn-outline-info" value="Update" />
+                    <a class="btn btn-outline-danger" asp-action="RemoveFromCart" asp-route-productId="@cartItem.ProductId">Remove</a>
+                </td>
+                
+            </tr>
+        </form>
+            }
+            <tbody>
+            </tbody>
+        </table>
+        <a asp-action="Order" class="btn btn-outline-success mt-3">Order</a>
+
+                <style>
+                .table tbody tr:hover {
+                    background-color: lightblue;
+                }
+            </style>
+    }
+}

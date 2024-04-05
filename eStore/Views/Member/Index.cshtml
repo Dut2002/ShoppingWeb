@@ -1,0 +1,128 @@
+﻿@model PaginatedList<BusinessObject.Member>
+
+@{
+    ViewData["Title"] = "Member Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Member Management</h1>
+
+<p>
+    <a class="btn btn-outline-info" asp-action="Create">+ Create New Member</a>
+</p>
+
+@if (TempData["Create"] != null && !string.IsNullOrEmpty(TempData["Create"].ToString()))
+{
+    await Html.RenderPartialAsync("Alert", new ViewDataDictionary(ViewData) { { "role", "success" }, { "message", TempData["Create"] } });
+}
+@if (TempData["Update"] != null && !string.IsNullOrEmpty(TempData["Update"].ToString()))
+{
+    await Html.RenderPartialAsync("Alert", new ViewDataDictionary(ViewData) { { "role", "success" }, { "message", TempData["Update"] } });
+}
+@if (TempData["Delete"] != null && !string.IsNullOrEmpty(TempData["Delete"].ToString()))
+{
+    await Html.RenderPartialAsync("Alert", new ViewDataDictionary(ViewData) { { "role", "success" }, { "message", TempData["Delete"] } });
+}
+
+<form asp-action="Index" asp-controller="Member" method="get">
+    <div class="input-group w-25" style="margin-left: 75%; margin-bottom: 20px;">
+        <div class="form-outline">
+            <input name="search" type="search" id="form1" class="form-control" value="@ViewBag.Search" />
+            <label class="form-label" for="form1">Search by Name</label>
+        </div>
+        <button type="submit" class="btn btn-primary" name="Search">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+@if (!Model.Any())
+{
+    <div class="text-danger">No results found!!</div>
+}
+else
+{
+    <table class="table table-hover table-bordered table-striped">
+        <thead class="table-primary">
+            <tr>
+                <th>
+                    Member ID
+                </th>
+                <th>
+                    Fullname
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Company Name
+                </th>
+                <th>
+                    City
+                </th>
+                <th>
+                    Country
+                </th>
+                @*<th>
+                    Password
+                </th>*@
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemberId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fullname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>*@
+                    <td>
+                        @if (item.Email != "admin@estore.com")
+                        {
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.MemberId">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    // Phân trang
+<div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="Index" asp-route-page="@(Model.PageIndex - 1)" class="btn btn-outline-primary @prevDisabled">Previous</a>
+    <a asp-action="Index" asp-route-page="@(Model.PageIndex + 1)" class="btn btn-outline-primary @nextDisabled">Next</a>
+</div>
+
+    <style>
+        .table tbody tr:hover {
+            background-color: lightblue;
+        }
+
+        .table a {
+            text-decoration: none;
+        }
+    </style>
+}

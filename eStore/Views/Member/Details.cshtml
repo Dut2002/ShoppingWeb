@@ -1,0 +1,77 @@
+﻿@model BusinessObject.Member
+
+@{
+    ViewData["Title"] = "Member Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Member Details</h1>
+<hr />
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <p class="text-danger">@ViewBag.Error</p>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+else
+{
+    <div>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.MemberId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.MemberId)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Fullname)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Fullname)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CompanyName)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.City)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.City)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Country)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Country)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.MemberId">Edit</a> |
+        <a class="btn btn-outline-dark" asp-action="Index">Back to List</a>
+    </div>
+
+        <style>
+
+            .row a {
+                text-decoration: none;
+            }
+        </style>
+}
+

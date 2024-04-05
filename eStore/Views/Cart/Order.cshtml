@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "Check Out";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Check Out</h1>
+<hr />
+@if (ViewBag.Error != null)
+{
+    <div class="row mt-3">
+        <div class="alert alert-danger" role="alert">@ViewBag.Error</div>
+    </div>
+}
+else if (ViewBag.Success != null)
+{
+    <div class="row mt-3">
+        <div class="alert alert-success" role="alert">@Html.Raw(ViewBag.Success)</div>
+    </div>
+}
+
+

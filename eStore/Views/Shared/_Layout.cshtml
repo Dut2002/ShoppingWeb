@@ -1,0 +1,185 @@
+﻿@using System.Security.Claims
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - eStore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
+          rel="stylesheet" />
+    <link rel="icon" type="image/png" href="https://scontent.fhan5-1.fna.fbcdn.net/v/t39.30808-6/272028866_110061908250795_8975520843648918379_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=fH_T6LGFYacAX-A8bbP&_nc_ht=scontent.fhan5-1.fna&oh=00_AfA0QfMvA0ieKlYkWNXEvLk1sXqM7TCRLvHMN-D74OpyFw&oe=641F4EE1">
+</head>
+<body>
+    <header>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <!-- Container wrapper -->
+            <div class="container-fluid">
+                <!-- Toggle button -->
+                <button class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Collapsible wrapper -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name)).Value.Equals("Admin"))
+                        { // Admin
+                            <!-- Navbar brand -->
+                            <a class="navbar-brand mt-2 mt-lg-0 pointer-event" asp-controller="Member" asp-action="Index">
+                                <img src="https://scontent.fhan5-1.fna.fbcdn.net/v/t39.30808-6/272028866_110061908250795_8975520843648918379_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=fH_T6LGFYacAX-A8bbP&_nc_ht=scontent.fhan5-1.fna&oh=00_AfA0QfMvA0ieKlYkWNXEvLk1sXqM7TCRLvHMN-D74OpyFw&oe=641F4EE1"
+                             height="35"
+                             alt="MDB Logo"
+                             loading="lazy" class="" />
+                            </a>
+                            <!-- Left links -->
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Member" asp-action="Index">Member Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Product" asp-action="Index">Product Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Order" asp-action="Index">Order Management</a>
+                                </li>
+                            </ul>
+                            <!-- Left links -->
+                        }
+                        else
+                        { // User
+                            <!-- Navbar brand -->
+                            <a class="navbar-brand mt-2 mt-lg-0 pointer-event" asp-controller="Product" asp-action="Index">
+                                <img src="https://scontent.fhan5-1.fna.fbcdn.net/v/t39.30808-6/272028866_110061908250795_8975520843648918379_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=fH_T6LGFYacAX-A8bbP&_nc_ht=scontent.fhan5-1.fna&oh=00_AfA0QfMvA0ieKlYkWNXEvLk1sXqM7TCRLvHMN-D74OpyFw&oe=641F4EE1"
+                             height="35"
+                             alt="MDB Logo"
+                             loading="lazy" class="" />
+                            </a>
+                            <!-- Left links -->
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Product" asp-action="Index">Shopping</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Order" asp-action="Index">My Orders</a>
+                                </li>
+                            </ul>
+                            <!-- Left links -->
+                        }
+                    }
+
+                </div>
+                <!-- Collapsible wrapper -->
+                <!-- Right elements -->
+                <div class="d-flex align-items-center">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name)).Value.Equals("Admin"))
+                        { // Admin
+
+                            <!-- Avatar -->
+                            <div class="dropdown">
+                                <a class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                           href="#"
+                           id="navbarDropdownMenuAvatar"
+                           role="button"
+                           data-mdb-toggle="dropdown"
+                           aria-expanded="false">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                                 class="rounded-circle"
+                                 height="25"
+                                 alt="Black and White Portrait of a Man"
+                                 loading="lazy" />
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="navbarDropdownMenuAvatar">
+
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Logout" asp-action="Index">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        { // User
+                            <!-- Icon -->
+                            <a class="text-reset me-3" asp-controller="Cart" asp-action="Index">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+
+
+                            <!-- Avatar -->
+                            <div class="dropdown">
+                                <a class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                           href="#"
+                           id="navbarDropdownMenuAvatar"
+                           role="button"
+                           data-mdb-toggle="dropdown"
+                           aria-expanded="false">
+                                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                                 class="rounded-circle"
+                                 height="25"
+                                 alt="Black and White Portrait of a Man"
+                                 loading="lazy" />
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="navbarDropdownMenuAvatar">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Member" asp-action="Profile">Edit My profile</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Logout" asp-action="Index">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    }
+
+
+                </div>
+                <!-- Right elements -->
+            </div>
+            <!-- Container wrapper -->
+        </nav>
+        <!-- Navbar -->
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            @*&copy; 2021 - eStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- MDB -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

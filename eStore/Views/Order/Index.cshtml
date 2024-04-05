@@ -1,0 +1,139 @@
+@model PaginatedList<BusinessObject.Order>
+
+@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Order Management</h1>
+
+
+@if (TempData["Delete"] != null && !string.IsNullOrEmpty(TempData["Delete"].ToString()))
+{
+    await Html.RenderPartialAsync("Alert", new ViewDataDictionary(ViewData) { { "role", "success" }, { "message", TempData["Delete"] } });
+}
+
+<form asp-action="Index" asp-controller="Order" method="get">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-2">
+                <label for="search" class="d-inline">Search Order by Order Date: </label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="start" class="d-inline">Start Date</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input id="start" name="start" aria-describedby="dateHelp" class="d-inline form-control" value="@ViewBag.Start" type="date" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="end" class="d-inline">End Date</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input id="end" name="end" class="d-block form-control" value="@ViewBag.End" type="date" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary" name="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3">
+                <small id="dateHelp" class="form-text text-muted">Leave the two inputs both blank if you don't want to filter by Order Date</small>
+            </div>
+        </div>
+    </div>
+</form>
+@if (ViewBag.Error != null)
+{
+    <div class="text-danger">
+        @ViewBag.Error
+    </div>
+}
+else
+{
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-hover table-bordered table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>
+                        Order ID
+                    </th>
+                    <th>
+                        Member Name
+                    </th>
+                    <th>
+                        Ordered Date
+                    </th>
+                    <th>
+                        Order Total
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Member.Fullname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        </td>
+                        <td>
+                            @ViewData[item.OrderId.ToString()]
+                        </td>
+                        <td>
+                            <a class="btn btn-success" asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                        </td>
+                        <td>
+                            @if(item.OrderDate != null && item.ShippedDate == null){
+                                <p class="text-dark">Pending</p>
+                            }
+                            else if(item.OrderDate != null && item.ShippedDate != null)
+                            {
+                                <p class="text-success">Successfully</p>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        // Phân trang
+        <div>
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+            <a asp-action="Index" asp-route-page="@(Model.PageIndex - 1)" class="btn btn-outline-primary @prevDisabled">Previous</a>
+            <a asp-action="Index" asp-route-page="@(Model.PageIndex + 1)" class="btn btn-outline-primary @nextDisabled">Next</a>
+        </div>
+    }
+    else
+    {
+        <div class="text-danger">No results found!!</div>
+    }
+    <style>
+        .table tbody tr:hover {
+            background-color: lightblue;
+        }
+    </style>
+}
